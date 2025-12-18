@@ -3,6 +3,7 @@ use config::{Config, ConfigError};
 use serde::Deserialize;
 
 #[derive(Deserialize)]
+#[allow(unused)]
 pub(crate) struct ShortcutConfig {
     api_url: String,
     api_key: String,
