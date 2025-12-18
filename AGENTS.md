@@ -1,0 +1,2 @@
+- Test with: `cargo test`
+- Run pre-commit hooks after all changes

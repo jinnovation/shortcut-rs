@@ -1,0 +1,1 @@
+/Users/jonathanjin/dev/shortcut-rs/AGENTS.md
