@@ -4,6 +4,10 @@ use clap::{Parser, Subcommand};
 
 use serde::Deserialize;
 
+use crate::shortcut::client::Client;
+
+mod shortcut;
+
 #[derive(Deserialize)]
 #[allow(unused)]
 pub(crate) struct ShortcutConfig {
@@ -45,6 +49,7 @@ enum Commands {
 #[derive(Subcommand)]
 enum StoriesSubcommand {
     List,
+    Get { id: String },
 }
 
 #[derive(Subcommand)]
@@ -52,24 +57,32 @@ enum EpicsSubcommand {
     List,
 }
 
-fn main() {
+fn main() -> clap::error::Result<()> {
     let settings = ShortcutConfig::new().unwrap();
 
     let cli = Cli::parse();
 
+    let client = Client {
+        api_url: settings.api_url,
+    };
+
     match &cli.command {
-        Some(Commands::Stories { command }) => match *command {
+        Some(Commands::Stories { command }) => match command {
             StoriesSubcommand::List => {
-                println!("stories list")
+                println!("stories list");
+                Ok(())
+            }
+            StoriesSubcommand::Get { id } => {
+                println!("{:?}", client.get_story_by_id(id).unwrap());
+                Ok(())
             }
         },
         Some(Commands::Epics { command }) => match *command {
             EpicsSubcommand::List => {
-                println!("epics list")
+                println!("epics list");
+                Ok(())
             }
         },
-        None => {}
+        None => Ok(()),
     }
-
-    println!("api_url: {:?}", settings.api_url);
 }
