@@ -8,7 +8,7 @@ use crate::shortcut::client::Client;
 
 mod shortcut;
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 #[allow(unused)]
 pub(crate) struct ShortcutConfig {
     api_url: String,
@@ -62,10 +62,7 @@ fn main() -> Result<(), reqwest::Error> {
 
     let cli = Cli::parse();
 
-    let client = Client {
-        api_url: settings.api_url,
-        api_key: settings.api_key,
-    };
+    let client = Client::new(settings);
 
     match &cli.command {
         Some(Commands::Stories { command }) => match command {
