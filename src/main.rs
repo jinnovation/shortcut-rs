@@ -12,7 +12,7 @@ mod shortcut;
 #[allow(unused)]
 pub(crate) struct ShortcutConfig {
     api_url: String,
-    // api_key: String,
+    api_key: String,
 }
 
 impl ShortcutConfig {
@@ -57,13 +57,14 @@ enum EpicsSubcommand {
     List,
 }
 
-fn main() -> clap::error::Result<()> {
+fn main() -> Result<(), reqwest::Error> {
     let settings = ShortcutConfig::new().unwrap();
 
     let cli = Cli::parse();
 
     let client = Client {
         api_url: settings.api_url,
+        api_key: settings.api_key,
     };
 
     match &cli.command {
@@ -73,7 +74,7 @@ fn main() -> clap::error::Result<()> {
                 Ok(())
             }
             StoriesSubcommand::Get { id } => {
-                println!("{:?}", client.get_story_by_id(id).unwrap());
+                println!("{:?}", client.get_story_by_id(id)?);
                 Ok(())
             }
         },
