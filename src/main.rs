@@ -73,7 +73,9 @@ fn main() -> Result<(), Box<dyn Error>> {
                 Ok(())
             }
             StoriesSubcommand::Get { id } => {
-                let story = client.get_story_by_id(id)?;
+                let Ok(story) = client.get_story_by_id(id) else {
+                    return Err(format!("Story ID {id} not found").into());
+                };
 
                 println!("{}", serde_json::to_string_pretty(&story)?);
                 Ok(())
