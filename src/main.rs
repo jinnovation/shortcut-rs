@@ -1,3 +1,5 @@
+use std::error::Error;
+
 use config::{Config, ConfigError};
 
 use clap::{Parser, Subcommand};
@@ -57,7 +59,7 @@ enum EpicsSubcommand {
     List,
 }
 
-fn main() -> Result<(), reqwest::Error> {
+fn main() -> Result<(), Box<dyn Error>> {
     let settings = ShortcutConfig::new().unwrap();
 
     let cli = Cli::parse();
@@ -71,7 +73,9 @@ fn main() -> Result<(), reqwest::Error> {
                 Ok(())
             }
             StoriesSubcommand::Get { id } => {
-                println!("{:?}", client.get_story_by_id(id)?);
+                let story = client.get_story_by_id(id)?;
+
+                println!("{}", serde_json::to_string_pretty(&story)?);
                 Ok(())
             }
         },
